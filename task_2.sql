@@ -1,44 +1,38 @@
-#!/usr/bin/env python3
-"""
-MySQLServer.py
-Creates the database `alx_book_store` on the local MySQL server.
+USE alx_book_store;
 
-Requirements:
-- Do NOT use SELECT or SHOW
-- Print "Database 'alx_book_store' created successfully!" on success
-- Print error message on connection failure
-- Properly open and close DB connection
-"""
+CREATE TABLE Authors (
+    author_id INT PRIMARY KEY,
+    author_name VARCHAR(215)
+);
 
-import mysql.connector
-from mysql.connector import Error
+CREATE TABLE Books (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(130),
+    author_id INT,
+    price DOUBLE,
+    publication_date DATE,
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id)
+);
 
-def create_database():
-    try:
-        # Update host/user/password if needed
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=""   # <- replace with your root password if required
-        )
+CREATE TABLE Customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(215),
+    email VARCHAR(215),
+    address TEXT
+);
 
-        if conn.is_connected():
-            cursor = conn.cursor()
-            # Create database if not exists (no SELECT/SHOW used)
-            cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
-            # Optional: ensure changes are flushed (not required for CREATE DATABASE)
-            # Print success message as required
-            print("Database 'alx_book_store' created successfully!")
-    except Error as e:
-        print("Error while connecting to MySQL:", e)
-    finally:
-        try:
-            if 'cursor' in locals():
-                cursor.close()
-            if 'conn' in locals() and conn.is_connected():
-                conn.close()
-        except Exception:
-            pass
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+);
 
-if __name__ == "__main__":
-    create_database()
+CREATE TABLE Order_Details (
+    orderdetailid INT PRIMARY KEY,
+    order_id INT,
+    book_id INT,
+    quantity DOUBLE,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);

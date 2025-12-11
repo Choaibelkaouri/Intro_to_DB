@@ -6,17 +6,15 @@ def main():
     cursor = None
 
     try:
-        # Establish connection to MySQL server
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
-            password=""   # <-- replace with your MySQL root password if needed
+            password=""
         )
 
         if connection.is_connected():
             cursor = connection.cursor()
 
-            # Create database WITHOUT using SELECT or SHOW
             cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
 
             print("Database 'alx_book_store' created successfully!")
